@@ -1,6 +1,5 @@
 CODE
 
-
 import pandas as pd
 import re
 import numpy as np
@@ -27,12 +26,12 @@ tokenizer.fit_on_texts(data['text'].values)
 X = tokenizer.texts_to_sequences(data['text'].values)
 X = pad_sequences(X)
 
-# Labels
+# Encode labels
 labelencoder = LabelEncoder()
 integer_encoded = labelencoder.fit_transform(data['sentiment'])
 y = to_categorical(integer_encoded)
 
-# Train/Test Split
+# Split data
 X_train, X_test, Y_train, Y_test = train_test_split(X, y, test_size=0.33, random_state=42)
 
 # Define and compile model
@@ -44,7 +43,7 @@ model.add(LSTM(lstm_out, dropout=0.2, recurrent_dropout=0.2))
 model.add(Dense(3, activation='softmax'))
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
-# Train
+# Train model
 model.fit(X_train, Y_train, epochs=1, batch_size=32, verbose=2)
 
 # Save model and tokenizer
@@ -69,3 +68,5 @@ padded = pad_sequences(seq, maxlen=X.shape[1])
 pred = model.predict(padded)
 print("Predicted probabilities:", pred)
 print("Predicted sentiment:", labelencoder.inverse_transform([np.argmax(pred)]))
+
+
